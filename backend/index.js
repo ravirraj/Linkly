@@ -4,12 +4,17 @@ import dotenv from 'dotenv';
 import  {connectToMongoDB}  from "./src/config/mongo.config.js"
 dotenv.config("./.env");
 
+
+
+
+import shortUrlRoutes from "./src/routes/short_url.routes.js"
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.get('/api/create')
+app.use("/api/url", shortUrlRoutes);
 
 
 app.listen(3000,()=>{
