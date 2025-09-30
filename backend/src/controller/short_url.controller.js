@@ -29,15 +29,16 @@ import {nanoid} from "nanoid";
 })
 
 
- const getShortUrl = asyncHandler(async (req, res) => {
-    const id = req.params.id;
-    const shortUrlDoc = await ShortUrl.findOne({ shortUrl: id });
-    if (!shortUrlDoc) {
-        throw new ApiError(404 ,"Short URL not found");
-    }
-    return res.redirect(shortUrlDoc.fullUrl);
-})
-
+const getShortUrl = asyncHandler(async (req, res) => {
+   const id = req.params.id;
+   // Atomically increment clicks and return the updated doc
+   const shortUrlDoc = await ShortUrl.findByShortUrlAndIncrement(id);
+   if (!shortUrlDoc) {
+       throw new ApiError(404, "Short URL not found");
+   }
+   return res.redirect(shortUrlDoc.fullUrl);
+});
+ 
 
 export { createShortUrl, getShortUrl }
 

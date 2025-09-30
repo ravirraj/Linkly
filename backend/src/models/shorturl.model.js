@@ -23,4 +23,13 @@ const shortUrlSchema = new mongoose.Schema({
 
 }, {timestamps: true});
 
+// Static helper: find by shortUrl and increment clicks atomically
+shortUrlSchema.statics.findByShortUrlAndIncrement = function(short) {
+  return this.findOneAndUpdate(
+    { shortUrl: short },
+    { $inc: { clicks: 1 } },
+    { new: true }
+  ).exec();
+};
+
 export const ShortUrl = mongoose.model("ShortUrl", shortUrlSchema);
