@@ -9,4 +9,4 @@ export const rootRoute = createRootRoute({
 });
 
 
- export const routeTree = rootRoute.addChildren([homepageRoute, authRoute, dashboardRoute]);
+ export const routeTree = rootRoute.addChildren([ homepageRoute , authRoute, dashboardRoute]);

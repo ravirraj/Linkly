@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+//     avatar: {
+//     type: String,
+//     default: function () {
+//       // jab bhi naya user banega, random avatar assign hoga
+//       return `https://api.dicebear.com/7.x/thumbs/svg?seed= ${this.username || Date.now()}`;
+//     },
+//   },
     refreshToken: {
         type: String,
         default: null
