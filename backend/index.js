@@ -14,7 +14,7 @@ import userRoutes from "./src/routes/user.routes.js"
 
 const app = express();
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.BASE_URL_FRONTEND,
     credentials: true, // Allow cookies to be sent
 }));
 app.use(express.json());
@@ -23,13 +23,17 @@ app.use(cookieParser())
 
 
 // routes
-
 app.use("/api/url", shortUrlRoutes);
 app.use("/api/auth", userRoutes);
 
 app.use(errorHandler);
 
-app.listen(3000,()=>{
+
+app.get("/",(req,res)=>{
+    res.send("Welcome to URL Shortener API");
+})
+
+app.listen(process.env.PORT,()=>{
     connectToMongoDB();
-    console.log('Server is running on port 3000');
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
