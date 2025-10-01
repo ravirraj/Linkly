@@ -28,15 +28,40 @@ const generateAccessAndRefereshTokens = async(userId) =>{
 // User registration
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
-    // Check if user already exists
+
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
         throw new ApiError(400, "Username or email already in use");
     }
+
     const newUser = new User({ username, email, password });
     await newUser.save();
-    return res.status(201).json(new ApiResponse(true, "User registered successfully"));
+
+    // yaha pe tokens banate hai
+    const tokens = await generateAccessAndRefereshTokens(newUser._id);
+
+    // set refreshToken cookie
+    res.cookie("refreshToken", tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(201).json({
+        success: true,
+        message: "User registered successfully",
+        accessToken: tokens.accessToken,
+        data: {
+            user: {
+                id: newUser._id,
+                username: newUser.username,
+                email: newUser.email
+            }
+        }
+    });
 });
+
 
 // User login
 const loginUser = asyncHandler(async (req, res) => {

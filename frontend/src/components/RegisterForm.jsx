@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import api from "../utils/axiousInstance";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export default function RegisterForm({ state }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
   const validateEmail = (email) => {
     // simple regex for email validation
