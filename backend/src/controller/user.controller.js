@@ -40,8 +40,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
 // User login
 const loginUser = asyncHandler(async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const { username , password , email} = req.body;
+    const user = await User.findOne({ $or:[{ email }, { username }] });
     if (!user || !(await user.comparePassword(password))) {
         throw new ApiError(401, "Invalid username or password");
     }
@@ -50,6 +50,14 @@ const loginUser = asyncHandler(async (req, res) => {
     // Generate tokens
 
     const tokens = await generateAccessAndRefereshTokens(user._id)
+
+    //set refresh token in db
+
+
+
+
+
+    // Set refresh token in HTTP-only cookie
     
 
     const options = {

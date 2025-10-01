@@ -1,17 +1,15 @@
 
 import InputField from "./components/InputField"
 import History from "./components/History"
+import { Outlet } from "@tanstack/react-router"
 function App() {
  
 
   return (
-    <>
-    <div className="min-h-screen bg-black text-white p-4 sm:p-6 lg:p-8 flex flex-col items-center">
 
-      <InputField />
-      <History />
-    </div>
-    </>
+    <>
+    <Outlet/>
+  </>
   )
 }
 
