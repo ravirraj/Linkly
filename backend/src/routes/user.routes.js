@@ -10,10 +10,10 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", authenticate, logoutUser);
-router.post("/refresh", refreshAccessToken);0
+router.post("/refresh", refreshAccessToken);
 
 // Protected route example
-router.get("/profile", authenticate, (req, res) => {
+router.get("/me", authenticate, (req, res) => {
     res.json({ user: req.user });
 });
 

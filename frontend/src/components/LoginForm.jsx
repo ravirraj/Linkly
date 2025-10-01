@@ -15,6 +15,7 @@ export default function LoginForm({ state }) {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
+
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -35,7 +36,8 @@ export default function LoginForm({ state }) {
 
 
       const res = await api.post("/api/auth/login", { email, password });
-      // console.log("Login successful:", res.data.data.user.username);
+      console.log("LOGIN RESPONSE FULL >>>", res.data);
+
       dispatch(setCredentials({
         user: res.data.data.user,
         accessToken: res.data.accessToken,
