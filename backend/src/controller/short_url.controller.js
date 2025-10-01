@@ -61,7 +61,7 @@ const getShortUrl = asyncHandler(async (req, res) => {
 
 const getAllShortUrls = asyncHandler(async (req, res) => {
     const userId = req.user ? req.user._id : null;
-    const shortUrls = await ShortUrl.find({ user: userId });
+    const shortUrls = await ShortUrl.find({ user: userId }).sort({ createdAt: -1 });
     return res.json({
         success: true,
         data: shortUrls

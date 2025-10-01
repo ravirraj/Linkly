@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import axiousInstance from "../utils/axiousInstance";
 import api from "../utils/axiousInstance";
+import { queryClient } from "@/main";
 
 export default function UrlShortener() {
   const [fullUrl, setFullUrl] = useState("");
@@ -57,6 +58,7 @@ export default function UrlShortener() {
 
       // ✅ short url save in state
       setShortUrl(res.data.data.shortUrl);
+      queryClient.invalidateQueries({queryKey : ["userUrls"]}); // Invalidate the URLs query to refresh the list
       setError("");
       setIsValid(true);
     } catch (err) {
