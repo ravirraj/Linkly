@@ -1,11 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+
+let isConnected = false;
 
 export const connectToMongoDB = async () => {
+  if (isConnected) return;
   try {
-    const db = await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB' + db.connection.host);
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    process.exit(1);
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: "linkly", // apna db name
+    });
+    isConnected = true;
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    throw err;
   }
 };
