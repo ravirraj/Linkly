@@ -5,6 +5,7 @@ import cors from 'cors';
 import  {connectToMongoDB}  from "./src/config/mongo.config.js"
 dotenv.config("./.env");
 import cookieParser from 'cookie-parser';
+import { errorHandler } from './src/middleware/error.middleware.js';
 
 
 import shortUrlRoutes from "./src/routes/short_url.routes.js"
@@ -20,9 +21,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser())
 
+
+// routes
+
 app.use("/api/url", shortUrlRoutes);
 app.use("/api/auth", userRoutes);
 
+app.use(errorHandler);
 
 app.listen(3000,()=>{
     connectToMongoDB();

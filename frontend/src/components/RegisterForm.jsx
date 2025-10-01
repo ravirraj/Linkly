@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import api from "../utils/axiousInstance";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "@tanstack/react-router";
+import { setCredentials } from "@/store/slice/authSlice";
 
 export default function RegisterForm({ state }) {
   const [name, setName] = useState("");
@@ -12,7 +14,7 @@ export default function RegisterForm({ state }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const validateEmail = (email) => {
     // simple regex for email validation
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,12 +33,22 @@ export default function RegisterForm({ state }) {
     }
 
     try {
-      console.log("Registering user:", { name, email, password });
+      const response = await api.post("api/auth/register", { username: name, email, password });
+    
+
+      if (response.data.error) {
+        setError(response.data.error);
+        return;
+      }
+
+      dispatch(setCredentials({ user: response.data.data.user, token: response.data.accessToken }));
+
+      navigate({ to: "/dashboard" });
       setError("");
-      // 👉 call your backend here
+
     } catch (err) {
-      console.error("Register error:", err);
-      setError("Failed to register. Try again.");
+      // console.error("Register error:", err.response.data.message || err.message);
+      setError(err.response?.data?.message || "Registration failed. Try again.");
     }
   };
 

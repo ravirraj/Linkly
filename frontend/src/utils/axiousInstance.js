@@ -3,10 +3,9 @@ import store from "../store/store.js";
 import { setCredentials, clearAuth } from "../store/slice/authSlice.js";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000", // apne backend ka URL
+  baseURL: import.meta.env.VITE_BACKEND_URL, // apne backend ka URL
   withCredentials: true,            // cookies bhejne ke liye
 });
-
 // RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (res) => res,
@@ -16,7 +15,7 @@ api.interceptors.response.use(
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const res = await api.post("/auth/refresh");
+        const res = await api.post("api/auth/refresh");
         const newAccessToken = res.data.accessToken;
 
         store.dispatch(

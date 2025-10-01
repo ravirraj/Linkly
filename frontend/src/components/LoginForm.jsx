@@ -12,8 +12,6 @@ export default function LoginForm({ state }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const auth = useSelector((state) => state.auth);
-  console.log("Auth state:", auth);
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
@@ -34,8 +32,8 @@ export default function LoginForm({ state }) {
     }
 
     try {
-      console.log("Logging in with", { email, password });
-      // 👉 call your backend here
+
+
       const res = await api.post("/api/auth/login", { email, password });
       // console.log("Login successful:", res.data.data.user.username);
       dispatch(setCredentials({
@@ -51,8 +49,8 @@ export default function LoginForm({ state }) {
       // Handle successful login (e.g., store token, redirect)
       setError("");
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Invalid credentials. Try again.");
+      // console.error("Login error:", err.response.data.message || err.message);
+      setError(err.response?.data?.message || "Login failed. Try again.");
     }
   };
 
