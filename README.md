@@ -116,6 +116,5 @@ CUSTOM_URL_ENDPOINT=https://short.yourdomain.com/
 NODE_ENV=production
 PORT=3000
 
-
 # Frontend sample .env — set this in Vercel (build-time). Must include protocol.
 VITE_BACKEND_URL=https://linkly-three-pi.vercel.app
