@@ -46,6 +46,10 @@ api.interceptors.response.use(
     if(originalRequest.url.includes("/api/auth/login") || originalRequest.url.includes("/api/auth/register")){
       return Promise.reject(err);
     }
+    if (!document.cookie.includes("refreshToken")) {
+  return Promise.reject(err);
+}
+
 
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
