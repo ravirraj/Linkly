@@ -17,7 +17,7 @@ const app = express();
 connectToMongoDB();
 
 app.use(cors({
-    origin: process.env.BASE_URL_FRONTEND,
+    origin: [process.env.BASE_URL_FRONTEND , "http://localhost:5173"],
     credentials: true,
 }));
 app.use(express.json());
