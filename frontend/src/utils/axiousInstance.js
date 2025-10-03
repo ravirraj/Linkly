@@ -19,7 +19,7 @@ const api = axios.create({
 });
 
 // refresh ke liye alag axios (interceptor loop avoid karne ke liye)
-const refreshApi = axios.create({
+export const refreshApi = axios.create({
   baseURL,
   withCredentials: true,
 });

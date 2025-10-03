@@ -1,38 +1,50 @@
-import { getCurrentUser } from "@/api/getUser";
+import api, { refreshApi } from "./axiousInstance.js";
 import { redirect } from "@tanstack/react-router";
 import { setCredentials, clearAuth } from "@/store/slice/authSlice";
 
 export const checkAuth = async ({ context }) => {
+  const store = context.store;
+
   try {
-    const store = context.store;
-    const queryClient = context.queryClient;
+    let accessToken = store.getState().auth.accessToken;
 
-    // backend se user data
-    const user = await queryClient.ensureQueryData({
-      queryKey: ["currentUser"],
-      queryFn: getCurrentUser,
-      retry: false,
-    });
-    // redux me save
-       if (user?.user && context.store) {
-      store.dispatch(
-        setCredentials({
-          user: user.user, // backend se aaya user
-          accessToken: user.accessToken, // agar /me response me token bhi bhej raha ho
-        })
-      );
+    // If no access token, try refreshing
+    if (!accessToken) {
+      try {
+        const refreshRes = await refreshApi.post("/api/auth/refresh");
+        accessToken = refreshRes.data.accessToken;
+
+        store.dispatch(
+          setCredentials({
+            user: refreshRes.data.user || null,
+            accessToken,
+          })
+        );
+      } catch (refreshErr) {
+        // Refresh failed -> redirect to login
+        store.dispatch(clearAuth());
+        throw redirect({ to: "/auth" });
+      }
     }
+
+    // Now we have a token (either from Redux or refreshed)
+    const res = await api.get("/api/auth/me");
+    const userData = res.data;
+
+    store.dispatch(
+      setCredentials({
+        user: userData.user,
+        accessToken: accessToken, // keep the current token
+      })
+    );
+
     const { isAuthenticated } = store.getState().auth;
-
-    if (!isAuthenticated) {
-      throw redirect({ to: "/auth" }); // ✅ return nahi, throw
-    }
+    if (!isAuthenticated) throw redirect({ to: "/auth" });
 
     return true;
   } catch (error) {
-    // error -> clear auth and redirect
-    console.log(error)
-    context.store.dispatch(clearAuth());
-    throw redirect({ to: "/auth" }); // ✅ throw karo
+    console.log("checkAuth error:", error.response?.data || error);
+    store.dispatch(clearAuth());
+    throw redirect({ to: "/auth" });
   }
 };
